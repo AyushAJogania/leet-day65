@@ -1,0 +1,32 @@
+#include <vector>
+#include <algorithm>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> merge(std::vector<std::vector<int>>& intervals) {
+        // Sort the intervals based on their start times
+        std::sort(intervals.begin(), intervals.end(), [](const std::vector<int>& a, const std::vector<int>& b) {
+            return a[0] < b[0];
+        });
+
+        std::vector<std::vector<int>> mergedIntervals;
+        std::vector<int> currentInterval = intervals[0];
+
+        for (int i = 1; i < intervals.size(); ++i) {
+            // Check if the current interval overlaps with the next interval
+            if (currentInterval[1] >= intervals[i][0]) {
+                // Merge the intervals by updating the end time
+                currentInterval[1] = std::max(currentInterval[1], intervals[i][1]);
+            } else {
+                // If no overlap, add the current interval to the result and update the current interval
+                mergedIntervals.push_back(currentInterval);
+                currentInterval = intervals[i];
+            }
+        }
+
+        // Add the last remaining interval to the result
+        mergedIntervals.push_back(currentInterval);
+
+        return mergedIntervals;
+    }
+};
